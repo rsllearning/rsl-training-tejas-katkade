@@ -37,6 +37,10 @@ public class SubscriptionPricingService {
 
         Objects.requireNonNull(tier, "Subscription tier cannot be null");
 
+        if (activeMonths < 0) {
+            throw new IllegalArgumentException("Active months cannot be negative: " + activeMonths);
+        }
+
         BigDecimal basePrice = tier.getBaseRate();
         BigDecimal postLongevityPrice = applyLongevityDiscount(basePrice, activeMonths);
         BigDecimal postVoucherPrice = applyVoucherDiscount(postLongevityPrice, voucherCode);
