@@ -1,0 +1,702 @@
+[
+  {
+    "id": "1",
+    "name": "Cloud Infrastructure Modernization",
+    "slug": "cloud-infrastructure-modernization",
+    "description": "Migrating legacy monolithic microservices to Kubernetes clusters with multi-region failover and automated disaster recovery.",
+    "category": "Engineering",
+    "status": "active",
+    "priority": "high",
+    "progress": 68,
+    "startDate": "2026-01-15",
+    "targetDate": "2026-11-30",
+    "budget": "$480,000",
+    "lead": {
+      "name": "Sarah Jenkins",
+      "role": "Principal DevOps Architect",
+      "email": "sarah.j@company.internal",
+      "avatar": "SJ"
+    },
+    "team": [
+      {
+        "id": "tm-1",
+        "name": "Sarah Jenkins",
+        "role": "Principal DevOps Architect",
+        "email": "sarah.j@company.internal",
+        "avatar": "SJ",
+        "tasksCount": 4
+      },
+      {
+        "id": "tm-2",
+        "name": "Marcus Vance",
+        "role": "Cloud Security Specialist",
+        "email": "marcus.v@company.internal",
+        "avatar": "MV",
+        "tasksCount": 3
+      },
+      {
+        "id": "tm-3",
+        "name": "Elena Rostova",
+        "role": "Site Reliability Engineer",
+        "email": "elena.r@company.internal",
+        "avatar": "ER",
+        "tasksCount": 5
+      },
+      {
+        "id": "tm-4",
+        "name": "David Kim",
+        "role": "Infrastructure Developer",
+        "email": "david.k@company.internal",
+        "avatar": "DK",
+        "tasksCount": 2
+      }
+    ],
+    "tasks": [
+      {
+        "id": "t-101",
+        "title": "Configure Terraform modules for AWS EKS multi-cluster deployment",
+        "status": "completed",
+        "priority": "high",
+        "assignee": "Sarah Jenkins",
+        "dueDate": "2026-03-10"
+      },
+      {
+        "id": "t-102",
+        "title": "Set up Istio Service Mesh with mTLS across all namespaces",
+        "status": "completed",
+        "priority": "high",
+        "assignee": "Marcus Vance",
+        "dueDate": "2026-04-15"
+      },
+      {
+        "id": "t-103",
+        "title": "Conduct disaster recovery failover drill in staging environment",
+        "status": "in_progress",
+        "priority": "critical",
+        "assignee": "Elena Rostova",
+        "dueDate": "2026-10-30"
+      },
+      {
+        "id": "t-104",
+        "title": "Migrate core auth database to Aurora PostgreSQL Multi-AZ",
+        "status": "in_progress",
+        "priority": "high",
+        "assignee": "David Kim",
+        "dueDate": "2026-11-12"
+      },
+      {
+        "id": "t-105",
+        "title": "Finalize Prometheus alerting thresholds and PagerDuty integration",
+        "status": "todo",
+        "priority": "medium",
+        "assignee": "Elena Rostova",
+        "dueDate": "2026-11-25"
+      }
+    ],
+    "activity": [
+      {
+        "id": "act-1",
+        "user": "Elena Rostova",
+        "action": "Completed load testing for ingress controllers at 50,000 req/sec",
+        "timestamp": "2 hours ago",
+        "category": "milestone"
+      },
+      {
+        "id": "act-2",
+        "user": "Marcus Vance",
+        "action": "Updated network security policies for staging VPC",
+        "timestamp": "5 hours ago",
+        "category": "commit"
+      },
+      {
+        "id": "act-3",
+        "user": "Sarah Jenkins",
+        "action": "Merged PR #244: Kubernetes 1.30 node pool upgrades",
+        "timestamp": "1 day ago",
+        "category": "deploy"
+      },
+      {
+        "id": "act-4",
+        "user": "David Kim",
+        "action": "Provisioned secondary replica for Postgres database",
+        "timestamp": "2 days ago",
+        "category": "task"
+      }
+    ],
+    "docs": {
+      "": {
+        "slug": "",
+        "title": "Cloud Modernization Documentation Index",
+        "summary": "Central resource portal for architecture, setup procedures, and cluster management.",
+        "content": "Welcome to the Cloud Infrastructure Modernization documentation repository. This portal contains all operational guides, architecture specifications, deployment steps, and database configurations required to maintain and scale our Kubernetes environment.",
+        "lastUpdated": "2026-10-18"
+      },
+      "setup": {
+        "slug": "setup",
+        "title": "Cluster Environment Setup Guide",
+        "summary": "Prerequisites, CLI tools, and authentication configuration for local and staging access.",
+        "content": "To interact with the modernization clusters, install kubectl v1.30+, Terraform 1.8+, and the AWS CLI v2. Authenticate using corporate SSO tokens via aws sso login --profile production-devops. Verify cluster connectivity using kubectl cluster-info.",
+        "lastUpdated": "2026-10-12"
+      },
+      "setup/database": {
+        "slug": "setup/database",
+        "title": "Database Provisioning and Migration",
+        "summary": "Detailed runbook for Amazon Aurora PostgreSQL setup, secrets rotation, and connection pooling.",
+        "content": "All databases are managed through Terraform in /infra/rds. Connection strings are injected via Kubernetes external secrets manager syncing with AWS Secrets Manager. Always test migrations locally before running goose up against staging.",
+        "lastUpdated": "2026-10-14"
+      },
+      "architecture": {
+        "slug": "architecture",
+        "title": "Multi-Region Cloud Architecture",
+        "summary": "High-level topology diagrams, edge routing with Cloudflare, and Istio service mesh configuration.",
+        "content": "The architecture uses active-passive multi-region deployments between us-east-1 and us-west-2. Traffic is routed via Route53 latency-based routing through Cloudflare CDN, terminating into AWS ALB and Istio ingress gateways.",
+        "lastUpdated": "2026-09-28"
+      }
+    }
+  },
+  {
+    "id": "2",
+    "name": "Mobile Banking Application v2.0",
+    "slug": "mobile-banking-app",
+    "description": "Next-generation retail banking application with biometric authentication, instant UPI transfers, and smart budgeting insights.",
+    "category": "Mobile",
+    "status": "in_progress",
+    "priority": "critical",
+    "progress": 82,
+    "startDate": "2026-02-01",
+    "targetDate": "2026-12-15",
+    "budget": "$620,000",
+    "lead": {
+      "name": "Priya Sharma",
+      "role": "Lead Mobile Engineering",
+      "email": "priya.s@company.internal",
+      "avatar": "PS"
+    },
+    "team": [
+      {
+        "id": "tm-5",
+        "name": "Priya Sharma",
+        "role": "Lead Mobile Engineering",
+        "email": "priya.s@company.internal",
+        "avatar": "PS",
+        "tasksCount": 5
+      },
+      {
+        "id": "tm-6",
+        "name": "Julian Moore",
+        "role": "iOS Senior Engineer",
+        "email": "julian.m@company.internal",
+        "avatar": "JM",
+        "tasksCount": 4
+      },
+      {
+        "id": "tm-7",
+        "name": "Amina Toure",
+        "role": "Android Senior Engineer",
+        "email": "amina.t@company.internal",
+        "avatar": "AT",
+        "tasksCount": 3
+      },
+      {
+        "id": "tm-8",
+        "name": "Liam Scott",
+        "role": "QA Automation Specialist",
+        "email": "liam.s@company.internal",
+        "avatar": "LS",
+        "tasksCount": 4
+      }
+    ],
+    "tasks": [
+      {
+        "id": "t-201",
+        "title": "Implement FaceID / TouchID biometric fallback flow",
+        "status": "completed",
+        "priority": "critical",
+        "assignee": "Julian Moore",
+        "dueDate": "2026-05-20"
+      },
+      {
+        "id": "t-202",
+        "title": "Integrate zero-knowledge encryption for stored financial tokens",
+        "status": "completed",
+        "priority": "critical",
+        "assignee": "Priya Sharma",
+        "dueDate": "2026-07-15"
+      },
+      {
+        "id": "t-203",
+        "title": "Complete offline transaction queue synchronization",
+        "status": "in_progress",
+        "priority": "high",
+        "assignee": "Amina Toure",
+        "dueDate": "2026-11-05"
+      },
+      {
+        "id": "t-204",
+        "title": "End-to-end regression testing on iOS 18 and Android 15",
+        "status": "in_progress",
+        "priority": "high",
+        "assignee": "Liam Scott",
+        "dueDate": "2026-11-20"
+      },
+      {
+        "id": "t-205",
+        "title": "Prepare App Store & Google Play metadata and screenshots",
+        "status": "todo",
+        "priority": "medium",
+        "assignee": "Priya Sharma",
+        "dueDate": "2026-12-01"
+      }
+    ],
+    "activity": [
+      {
+        "id": "act-5",
+        "user": "Julian Moore",
+        "action": "Resolved memory leak in live transaction balance widget",
+        "timestamp": "1 hour ago",
+        "category": "commit"
+      },
+      {
+        "id": "act-6",
+        "user": "Liam Scott",
+        "action": "Generated automated UI test report with 98.4% passing rate",
+        "timestamp": "4 hours ago",
+        "category": "milestone"
+      },
+      {
+        "id": "act-7",
+        "user": "Amina Toure",
+        "action": "Published internal TestFlight build v2.0.0-rc3",
+        "timestamp": "1 day ago",
+        "category": "deploy"
+      }
+    ],
+    "docs": {
+      "": {
+        "slug": "",
+        "title": "Mobile App v2.0 Technical Documentation",
+        "summary": "Architecture specifications, state management paradigms, and testing guidelines.",
+        "content": "This repository documents the React Native and native module architecture for the Mobile Banking 2.0 release. It highlights security protocols, biometric hardware interaction, and offline cache consistency.",
+        "lastUpdated": "2026-10-20"
+      },
+      "setup": {
+        "slug": "setup",
+        "title": "Mobile Developer Environment Setup",
+        "summary": "Xcode, Android Studio, CocoaPods, and mock API emulator initialization.",
+        "content": "Install Node 20+, Xcode 16, and Android Studio Ladybug. Ensure CocoaPods is updated via gem install cocoapods. Run npm run mobile:setup to install dependencies and configure local environment variables.",
+        "lastUpdated": "2026-10-05"
+      },
+      "setup/database": {
+        "slug": "setup/database",
+        "title": "Local SQLite and WatermelonDB Caching",
+        "summary": "Schema definitions, encrypted SQLite store, and bidirectional synchronization.",
+        "content": "Local device storage uses SQLCipher with 256-bit AES encryption. Sensitive fields are further hashed using salt keys derived during biometric unlock.",
+        "lastUpdated": "2026-10-08"
+      },
+      "architecture": {
+        "slug": "architecture",
+        "title": "Clean Architecture & State Machine Flow",
+        "summary": "Domain driven design patterns, repository layer, and unidirectional data streams.",
+        "content": "The application enforces a Clean Architecture pattern with distinct Presentation, Domain, and Data layers. View models communicate with use cases via immutable state flows.",
+        "lastUpdated": "2026-09-15"
+      }
+    }
+  },
+  {
+    "id": "3",
+    "name": "Enterprise Design System",
+    "slug": "enterprise-design-system",
+    "description": "Unified accessible component library and token framework supporting Web, React Native, and desktop platforms.",
+    "category": "Design",
+    "status": "active",
+    "priority": "medium",
+    "progress": 45,
+    "startDate": "2026-03-01",
+    "targetDate": "2027-01-30",
+    "budget": "$210,000",
+    "lead": {
+      "name": "Alex Chen",
+      "role": "Head of Design Systems",
+      "email": "alex.c@company.internal",
+      "avatar": "AC"
+    },
+    "team": [
+      {
+        "id": "tm-9",
+        "name": "Alex Chen",
+        "role": "Head of Design Systems",
+        "email": "alex.c@company.internal",
+        "avatar": "AC",
+        "tasksCount": 3
+      },
+      {
+        "id": "tm-10",
+        "name": "Chloe Dupont",
+        "role": "Senior UI/UX Designer",
+        "email": "chloe.d@company.internal",
+        "avatar": "CD",
+        "tasksCount": 4
+      },
+      {
+        "id": "tm-11",
+        "name": "Nate Bailey",
+        "role": "Accessibility Specialist",
+        "email": "nate.b@company.internal",
+        "avatar": "NB",
+        "tasksCount": 2
+      }
+    ],
+    "tasks": [
+      {
+        "id": "t-301",
+        "title": "Establish semantic color tokens and WCAG AAA contrast ratios",
+        "status": "completed",
+        "priority": "high",
+        "assignee": "Alex Chen",
+        "dueDate": "2026-05-30"
+      },
+      {
+        "id": "t-302",
+        "title": "Build primitive form elements with full keyboard navigation",
+        "status": "in_progress",
+        "priority": "medium",
+        "assignee": "Chloe Dupont",
+        "dueDate": "2026-11-15"
+      },
+      {
+        "id": "t-303",
+        "title": "Audit screen-reader accessibility on complex data table components",
+        "status": "todo",
+        "priority": "high",
+        "assignee": "Nate Bailey",
+        "dueDate": "2026-12-10"
+      }
+    ],
+    "activity": [
+      {
+        "id": "act-8",
+        "user": "Chloe Dupont",
+        "action": "Published Figma component library release v1.4.0",
+        "timestamp": "3 hours ago",
+        "category": "deploy"
+      },
+      {
+        "id": "act-9",
+        "user": "Alex Chen",
+        "action": "Added typography scale tokens for ultra-wide displays",
+        "timestamp": "1 day ago",
+        "category": "commit"
+      }
+    ],
+    "docs": {
+      "": {
+        "slug": "",
+        "title": "Design System Documentation",
+        "summary": "Design tokens, accessibility standards, and usage guidelines for product engineers.",
+        "content": "The Enterprise Design System provides consistent, accessible, and themeable UI components across all digital touchpoints. Follow our token guidelines to maintain visual cohesion.",
+        "lastUpdated": "2026-10-15"
+      },
+      "setup": {
+        "slug": "setup",
+        "title": "Installing and Using UI Packages",
+        "summary": "Package installation, theme provider wrapper, and CSS variable injection.",
+        "content": "Install @company/ui-core and @company/tokens. Wrap your application root in the EnterpriseThemeProvider to activate system font styles and color variables.",
+        "lastUpdated": "2026-10-01"
+      }
+    }
+  },
+  {
+    "id": "4",
+    "name": "Customer Intelligence AI Engine",
+    "slug": "customer-intelligence-ai",
+    "description": "Real-time behavioral prediction and churn prevention platform powered by high-throughput streaming inference.",
+    "category": "AI / ML",
+    "status": "planning",
+    "priority": "high",
+    "progress": 25,
+    "startDate": "2026-06-01",
+    "targetDate": "2027-04-15",
+    "budget": "$540,000",
+    "lead": {
+      "name": "Dr. Aris Thorne",
+      "role": "Principal AI Researcher",
+      "email": "aris.t@company.internal",
+      "avatar": "AT",
+      "tasksCount": 4
+    },
+    "team": [
+      {
+        "id": "tm-12",
+        "name": "Dr. Aris Thorne",
+        "role": "Principal AI Researcher",
+        "email": "aris.t@company.internal",
+        "avatar": "AT",
+        "tasksCount": 4
+      },
+      {
+        "id": "tm-13",
+        "name": "Devan Patel",
+        "role": "MLOps Engineer",
+        "email": "devan.p@company.internal",
+        "avatar": "DP",
+        "tasksCount": 3
+      },
+      {
+        "id": "tm-14",
+        "name": "Grace Hopper",
+        "role": "Data Pipeline Architect",
+        "email": "grace.h@company.internal",
+        "avatar": "GH",
+        "tasksCount": 2
+      }
+    ],
+    "tasks": [
+      {
+        "id": "t-401",
+        "title": "Establish Ray cluster and GPU autoscaling policies on AWS",
+        "status": "completed",
+        "priority": "high",
+        "assignee": "Devan Patel",
+        "dueDate": "2026-08-30"
+      },
+      {
+        "id": "t-402",
+        "title": "Train baseline churn propensity model using LightGBM",
+        "status": "in_progress",
+        "priority": "critical",
+        "assignee": "Dr. Aris Thorne",
+        "dueDate": "2026-11-20"
+      },
+      {
+        "id": "t-403",
+        "title": "Create Kafka ingestion pipeline for clickstream event telemetry",
+        "status": "todo",
+        "priority": "high",
+        "assignee": "Grace Hopper",
+        "dueDate": "2026-12-05"
+      }
+    ],
+    "activity": [
+      {
+        "id": "act-10",
+        "user": "Dr. Aris Thorne",
+        "action": "Completed validation run on 10M customer interaction vectors",
+        "timestamp": "6 hours ago",
+        "category": "milestone"
+      },
+      {
+        "id": "act-11",
+        "user": "Devan Patel",
+        "action": "Deployed Triton Inference Server to staging namespace",
+        "timestamp": "2 days ago",
+        "category": "deploy"
+      }
+    ],
+    "docs": {
+      "": {
+        "slug": "",
+        "title": "AI Engine Architecture & Model Specs",
+        "summary": "ML model pipelines, feature store documentation, and latency SLA guidelines.",
+        "content": "This section outlines the model training lifecycle, feature engineering store, and real-time streaming inference APIs for the Customer Intelligence Engine.",
+        "lastUpdated": "2026-10-10"
+      },
+      "setup": {
+        "slug": "setup",
+        "title": "ML Development Environment Setup",
+        "summary": "Conda virtual environment, CUDA drivers, and MLflow registry credentials.",
+        "content": "Configure Python 3.11 with poetry. Ensure NVIDIA CUDA 12.4 drivers are loaded. Connect to the central MLflow tracking server using your corporate SSO credentials.",
+        "lastUpdated": "2026-09-20"
+      }
+    }
+  },
+  {
+    "id": "5",
+    "name": "Zero Trust Security Architecture",
+    "slug": "zero-trust-security",
+    "description": "Comprehensive enterprise identity overhaul implementing device posture verification, micro-segmentation, and continuous authorization.",
+    "category": "Security",
+    "status": "completed",
+    "priority": "critical",
+    "progress": 100,
+    "startDate": "2025-09-01",
+    "targetDate": "2026-08-30",
+    "budget": "$750,000",
+    "lead": {
+      "name": "Robert Sterling",
+      "role": "Chief Information Security Officer",
+      "email": "robert.s@company.internal",
+      "avatar": "RS"
+    },
+    "team": [
+      {
+        "id": "tm-15",
+        "name": "Robert Sterling",
+        "role": "Chief Information Security Officer",
+        "email": "robert.s@company.internal",
+        "avatar": "RS",
+        "tasksCount": 2
+      },
+      {
+        "id": "tm-16",
+        "name": "Kenji Sato",
+        "role": "Identity Systems Engineer",
+        "email": "kenji.s@company.internal",
+        "avatar": "KS",
+        "tasksCount": 3
+      }
+    ],
+    "tasks": [
+      {
+        "id": "t-501",
+        "title": "Enforce hardware FIDO2 security keys for all 2,400 staff members",
+        "status": "completed",
+        "priority": "critical",
+        "assignee": "Kenji Sato",
+        "dueDate": "2026-03-31"
+      },
+      {
+        "id": "t-502",
+        "title": "Implement perimeter-free software defined network policies",
+        "status": "completed",
+        "priority": "high",
+        "assignee": "Robert Sterling",
+        "dueDate": "2026-06-30"
+      },
+      {
+        "id": "t-503",
+        "title": "Achieve SOC 2 Type II and ISO 27001 recertification",
+        "status": "completed",
+        "priority": "critical",
+        "assignee": "Robert Sterling",
+        "dueDate": "2026-08-15"
+      }
+    ],
+    "activity": [
+      {
+        "id": "act-12",
+        "user": "Robert Sterling",
+        "action": "Published final SOC 2 compliance verification certificate",
+        "timestamp": "3 days ago",
+        "category": "milestone"
+      },
+      {
+        "id": "act-13",
+        "user": "Kenji Sato",
+        "action": "Automated annual credential rotation for service accounts",
+        "timestamp": "1 week ago",
+        "category": "task"
+      }
+    ],
+    "docs": {
+      "": {
+        "slug": "",
+        "title": "Zero Trust Security Handbook",
+        "summary": "Enterprise security requirements, hardware key protocols, and authorization guidelines.",
+        "content": "Reference guide for all security policies, SSO access profiles, VPN deprecation, and perimeter-less networking rules.",
+        "lastUpdated": "2026-08-30"
+      }
+    }
+  },
+  {
+    "id": "6",
+    "name": "Global Payment Gateway Integration",
+    "slug": "global-payment-gateway",
+    "description": "Multi-currency checkout platform supporting Stripe, Adyen, SEPA direct debits, and localized payment rails.",
+    "category": "Engineering",
+    "status": "active",
+    "priority": "high",
+    "progress": 91,
+    "startDate": "2026-02-15",
+    "targetDate": "2026-11-15",
+    "budget": "$390,000",
+    "lead": {
+      "name": "Tariq Mansour",
+      "role": "FinTech Principal Engineer",
+      "email": "tariq.m@company.internal",
+      "avatar": "TM"
+    },
+    "team": [
+      {
+        "id": "tm-17",
+        "name": "Tariq Mansour",
+        "role": "FinTech Principal Engineer",
+        "email": "tariq.m@company.internal",
+        "avatar": "TM",
+        "tasksCount": 3
+      },
+      {
+        "id": "tm-18",
+        "name": "Hannah Berg",
+        "role": "Backend Payments Engineer",
+        "email": "hannah.b@company.internal",
+        "avatar": "HB",
+        "tasksCount": 4
+      }
+    ],
+    "tasks": [
+      {
+        "id": "t-601",
+        "title": "Implement webhook idempotency and replay protection layer",
+        "status": "completed",
+        "priority": "critical",
+        "assignee": "Tariq Mansour",
+        "dueDate": "2026-06-15"
+      },
+      {
+        "id": "t-602",
+        "title": "Conduct PCI-DSS Level 1 compliance vulnerability scans",
+        "status": "completed",
+        "priority": "critical",
+        "assignee": "Hannah Berg",
+        "dueDate": "2026-09-10"
+      },
+      {
+        "id": "t-603",
+        "title": "Enable dynamic currency conversion for European currencies",
+        "status": "in_progress",
+        "priority": "high",
+        "assignee": "Tariq Mansour",
+        "dueDate": "2026-11-10"
+      }
+    ],
+    "activity": [
+      {
+        "id": "act-14",
+        "user": "Hannah Berg",
+        "action": "Passed third-party PCI audit with zero non-conformances",
+        "timestamp": "5 hours ago",
+        "category": "milestone"
+      },
+      {
+        "id": "act-15",
+        "user": "Tariq Mansour",
+        "action": "Configured dynamic routing rules for Adyen fallback gateway",
+        "timestamp": "2 days ago",
+        "category": "commit"
+      }
+    ],
+    "docs": {
+      "": {
+        "slug": "",
+        "title": "Payment Gateway Integration Guide",
+        "summary": "Webhook processing, retry semantics, and PCI DSS compliance protocols.",
+        "content": "This guide provides instructions for integrating third-party payment rails, handling async webhooks, and preventing double-charge scenarios using distributed Redis locks.",
+        "lastUpdated": "2026-10-19"
+      },
+      "setup": {
+        "slug": "setup",
+        "title": "Sandbox Credentials & Webhook Listener",
+        "summary": "Configuring test credit cards, mock webhook listeners, and local tunnels.",
+        "content": "Use Stripe CLI to forward events to http://localhost:3000/api/webhooks/stripe. Set STRIPE_SECRET_KEY in your local .env.local file.",
+        "lastUpdated": "2026-09-12"
+      },
+      "setup/database": {
+        "slug": "setup/database",
+        "title": "Ledger Database Schema",
+        "summary": "Double-entry accounting ledger tables, immutable transaction journals, and audit tables.",
+        "content": "The ledger database enforces strict double-entry accounting. Modifying historical rows is prohibited by database triggers; corrections must be issued as compensatory transactions.",
+        "lastUpdated": "2026-09-25"
+      }
+    }
+  }
+]
