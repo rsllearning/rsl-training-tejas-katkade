@@ -1,0 +1,12 @@
+{
+  "name": "styling-paradigms-assignment",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RSL Training - Styling Paradigms: Tailwind CSS Dashboard & Vanilla Extract Component Library",
+  "scripts": {
+    "dev:ex1": "npm --prefix exercise-1 run dev",
+    "dev:ex2": "npm --prefix exercise-2 run dev",
+    "build:ex1": "npm --prefix exercise-1 run build",
+    "build:ex2": "npm --prefix exercise-2 run build"
+  }
+}
