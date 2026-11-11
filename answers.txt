@@ -1,0 +1,116 @@
+================================================================================
+PART A: HANDS-ON SECURITY CODE REVIEW
+================================================================================
+
+Code Under Review:
+--------------------------------------------------------------------------------
+const value = location.hash.substring(1); 
+document.querySelector("#result").innerHTML = value; 
+
+const config = {}; 
+Object.assign( 
+  config, 
+  JSON.parse( 
+    localStorage.getItem("config") 
+  ) 
+); 
+
+const user = await getUser(); 
+renderClient({ 
+  user 
+}); 
+--------------------------------------------------------------------------------
+
+Findings and Security Concerns:
+--------------------------------------------------------------------------------
+
+Finding 1: Location.hash - Untrusted URL Data (DOM-Based Cross-Site Scripting / DOM XSS)
+- Vulnerable Code:
+    const value = location.hash.substring(1); 
+    document.querySelector("#result").innerHTML = value;
+- Security Concern:
+    The application extracts unvalidated data directly from `location.hash` (an attacker-controlled source) and passes it directly into the `.innerHTML` property of a DOM element (an execution sink) without any HTML encoding, sanitization, or validation.
+- Risk & Impact:
+    An attacker can construct a malicious link containing an XSS payload in the fragment identifier (e.g., `https://example.com/#<img src=x onerror=alert(document.cookie)>`). When a victim opens this link, the payload executes arbitrary JavaScript in the victim's browser session. This can lead to session hijacking, credential theft, unauthorized API actions, and complete account takeover.
+- Remediation:
+    Avoid using `.innerHTML` with untrusted data. Use safe DOM text assignment APIs such as `.textContent` or `.innerText`:
+    document.querySelector("#result").textContent = value;
+    If rich HTML formatting is strictly required, sanitize the untrusted string using a robust, battle-tested library such as DOMPurify before assigning to `.innerHTML`.
+
+
+Finding 2: Prototype Pollution via Object.assign with Unvalidated Storage Input
+- Vulnerable Code:
+    const config = {}; 
+    Object.assign( 
+      config, 
+      JSON.parse( 
+        localStorage.getItem("config") 
+      ) 
+    );
+- Security Concern:
+    `Object.assign()` copies all enumerable own properties from the parsed `localStorage` object to `config`. If the data stored in `localStorage` contains special keys such as `"__proto__"`, `"constructor"`, or `"prototype"`, copying them can pollute the base `Object.prototype` or alter the inheritance chain of plain JavaScript objects.
+- Risk & Impact:
+    Prototype pollution can alter the behavior of all objects across the application runtime. This can cause unexpected application crashes (Denial of Service), logic bypasses (e.g., if code later checks `if (config.isAdmin)` or `if (user.role)`), or even remote code execution in environments that evaluate dynamic properties.
+- Remediation:
+    1. Create dictionary objects without a prototype: `const config = Object.create(null);`
+    2. Validate and filter incoming keys against a strict allowlist.
+    3. Explicitly reject or ignore keys named `"__proto__"`, `"constructor"`, and `"prototype"`.
+
+
+Finding 3: Uncaught SyntaxError / Client-Side Denial of Service (DoS) via JSON.parse
+- Vulnerable Code:
+    JSON.parse(localStorage.getItem("config"))
+- Security Concern:
+    `localStorage.getItem("config")` may return `null` if the item does not exist, or an invalid/corrupted JSON string. Passing malformed JSON into `JSON.parse()` throws an unhandled `SyntaxError` exception.
+- Risk & Impact:
+    Because there is no `try...catch` block, an unhandled exception immediately halts the execution of the entire script. Subsequent operations, including `await getUser()` and `renderClient()`, will never execute, resulting in a broken interface and Client-Side Denial of Service.
+- Remediation:
+    Always wrap `JSON.parse()` in a `try...catch` block with safe fallback default values:
+    let parsedConfig = {};
+    try {
+        const stored = localStorage.getItem("config");
+        if (stored) {
+            parsedConfig = JSON.parse(stored);
+        }
+    } catch (e) {
+        console.error("Failed to parse config from localStorage:", e);
+        parsedConfig = {};
+    }
+
+
+Finding 4: Insecure Storage and Lack of Integrity Checking in localStorage
+- Vulnerable Code:
+    localStorage.getItem("config")
+- Security Concern:
+    `localStorage` is accessible to all client-side JavaScript executing in the origin, including third-party scripts, browser extensions, and injected XSS payloads. It lacks protection mechanisms like the `HttpOnly` flag. Furthermore, the application treats data retrieved from `localStorage` as trusted without verifying its authenticity, structure, or data types.
+- Risk & Impact:
+    Any malicious script on the origin can overwrite `config` in `localStorage` to persistently inject malicious values or poison application settings, turning a transient XSS vulnerability into a persistent compromise.
+- Remediation:
+    1. Never store sensitive credentials, secrets, or privileged authorization flags in `localStorage`.
+    2. Always validate and sanitize data retrieved from `localStorage` before using it in application logic or rendering it to the DOM.
+
+
+Finding 5: Sensitive Data Exposure / Potential Injection in renderClient({ user })
+- Vulnerable Code:
+    const user = await getUser(); 
+    renderClient({ 
+      user 
+    });
+- Security Concern:
+    Passing the full `user` object directly into `renderClient` without field filtering or projection risks exposing sensitive internal fields (such as authentication tokens, session identifiers, password hashes, or internal user IDs) to client-side components and DOM markup. Additionally, if `user` contains untrusted user-supplied data (such as display names or bios) and `renderClient` renders them using `.innerHTML`, it creates a Stored XSS vulnerability.
+- Risk & Impact:
+    Information disclosure of user credentials or session tokens; potential Stored Cross-Site Scripting if user profile fields are injected into HTML without encoding.
+- Remediation:
+    1. Apply the Data Transfer Object (DTO) pattern: expose and pass only the specific, non-sensitive fields required by the UI (e.g., `{ id, name, email }`).
+    2. Ensure `renderClient` safely sets text content or encodes output before inserting values into the DOM.
+
+
+Finding 6: Unhandled Asynchronous Promise Rejection
+- Vulnerable Code:
+    const user = await getUser();
+- Security Concern:
+    The asynchronous function call `getUser()` is performed at the top level without a `try...catch` block or error handler.
+- Risk & Impact:
+    If the network request fails (e.g., due to network disconnection, timeout, or server HTTP 500 error), an unhandled promise rejection is raised, leaving the application in an uninitialized or broken visual state with no feedback to the user.
+- Remediation:
+    Wrap asynchronous calls in a `try...catch` block and render an accessible fallback/error UI when failures occur.

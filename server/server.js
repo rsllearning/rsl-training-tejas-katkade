@@ -9,10 +9,43 @@ const PORT = 3000;
 app.use(express.json());
 
 /*
- * Home page
+ * Global Security Middleware:
+ * 1. Content Security Policy (CSP): Prevents XSS, controls resource loading.
+ * 2. Clickjacking Protection: X-Frame-Options + CSP frame-ancestors.
+ * 3. MIME-Sniffing Protection: X-Content-Type-Options.
+ */
+app.use((req, res, next) => {
+    // Defense-in-depth: Strict Content Security Policy
+    res.setHeader(
+        "Content-Security-Policy",
+        "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self';"
+    );
+
+    // Defense-in-depth: Prevent clickjacking across modern and legacy browsers
+    res.setHeader("X-Frame-Options", "DENY");
+
+    // Prevent MIME-type sniffing
+    res.setHeader("X-Content-Type-Options", "nosniff");
+
+    next();
+});
+
+/*
+ * Helper: Sanitizes user data for public SSR and API responses.
+ * Fixes SSR Token Leakage by stripping sensitive session and refresh tokens.
+ */
+function getPublicUserProfile(userData) {
+    if (!userData) return null;
+    const { id, name, email, role } = userData;
+    return { id, name, email, role };
+}
+
+/*
+ * Home page (Dashboard)
  */
 app.get("/", (req, res) => {
-    const initialUserData = JSON.stringify(user);
+    // Safely expose only public profile information; sensitive tokens are stripped
+    const safeUserData = JSON.stringify(getPublicUserProfile(user)).replace(/</g, "\\u003c");
 
     res.send(`
         <!DOCTYPE html>
@@ -75,9 +108,8 @@ app.get("/", (req, res) => {
                 </section>
             </main>
 
-            <script>
-                window.initialUser = ${initialUserData};
-            </script>
+            <!-- Secure data hydration via non-executable JSON script tag -->
+            <script id="initial-user" type="application/json">${safeUserData}</script>
 
             <script src="/app.js"></script>
         </body>
@@ -87,25 +119,59 @@ app.get("/", (req, res) => {
 
 /*
  * Profile API
+ * Exposes only safe public profile data.
  */
 app.get("/api/profile", (req, res) => {
-    res.json(user);
+    res.json(getPublicUserProfile(user));
 });
 
 /*
  * Settings API
  */
+const ALLOWED_SETTINGS = {
+    theme: ["light", "dark"],
+    language: ["en", "fr"],
+    fontSize: ["small", "medium", "large"]
+};
+
 app.get("/api/settings", (req, res) => {
     res.json(defaultSettings);
 });
 
+/*
+ * Settings POST API
+ * Fixes Prototype Pollution by:
+ * 1. Blocking dangerous prototype keys (__proto__, constructor, prototype)
+ * 2. Validating keys against an explicit allowlist
+ * 3. Enforcing validated allowed values
+ */
 app.post("/api/settings", (req, res) => {
     const incomingSettings = req.body;
 
+    if (!incomingSettings || typeof incomingSettings !== "object" || Array.isArray(incomingSettings)) {
+        return res.status(400).json({ message: "Invalid payload format." });
+    }
+
+    // Explicit check to block prototype pollution keys
+    if (
+        Object.prototype.hasOwnProperty.call(incomingSettings, "__proto__") ||
+        Object.prototype.hasOwnProperty.call(incomingSettings, "constructor") ||
+        Object.prototype.hasOwnProperty.call(incomingSettings, "prototype")
+    ) {
+        return res.status(400).json({
+            message: "Disallowed prototype property detected."
+        });
+    }
+
     const settings = {};
 
-    for (const key in incomingSettings) {
-        settings[key] = incomingSettings[key];
+    for (const [key, allowedValues] of Object.entries(ALLOWED_SETTINGS)) {
+        if (Object.prototype.hasOwnProperty.call(incomingSettings, key)) {
+            const val = incomingSettings[key];
+            if (allowedValues.includes(val)) {
+                settings[key] = val;
+            }
+        }
     }
 
     res.json({
@@ -116,6 +182,8 @@ app.post("/api/settings", (req, res) => {
 
 /*
  * Account page
+ * Protected against clickjacking via CSP frame-ancestors 'none' and X-Frame-Options: DENY.
+ * Inline script moved to external /account.js to comply with strict script-src 'self' CSP.
  */
 app.get("/account", (req, res) => {
     res.send(`
@@ -185,14 +253,7 @@ app.get("/account", (req, res) => {
                 <p id="status"></p>
             </div>
 
-            <script>
-                document
-                    .getElementById("delete-account")
-                    .addEventListener("click", () => {
-                        document.getElementById("status").textContent =
-                            "Account deletion action triggered.";
-                    });
-            </script>
+            <script src="/account.js"></script>
         </body>
         </html>
     `);

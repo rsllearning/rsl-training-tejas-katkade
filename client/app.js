@@ -1,33 +1,58 @@
 const app = document.getElementById("app");
 
+// Safely retrieve initial user data from secure JSON script tag
+let initialUser = window.initialUser || null;
+const initialUserScript = document.getElementById("initial-user");
+if (initialUserScript) {
+    try {
+        initialUser = JSON.parse(initialUserScript.textContent);
+    } catch (e) {
+        console.error("Failed to parse initial user data:", e);
+    }
+}
+
 const params = new URLSearchParams(window.location.search);
 
 const username =
     params.get("name") ||
-    window.initialUser?.name ||
+    initialUser?.name ||
     "Guest";
 
-app.innerHTML = `
-    <section class="profile-card">
-        <h2>Welcome, ${username}</h2>
+// Secure DOM manipulation using createElement and textContent.
+// Fixes DOM-based XSS by treating untrusted URL input strictly as text,
+// preventing browser execution of injected markup or script tags.
+const profileCard = document.createElement("section");
+profileCard.className = "profile-card";
 
-        <p>
-            Email:
-            ${window.initialUser?.email || "Unknown"}
-        </p>
+const heading = document.createElement("h2");
+heading.textContent = `Welcome, ${username}`;
 
-        <p>
-            Role:
-            ${window.initialUser?.role || "User"}
-        </p>
-    </section>
-`;
+const emailParagraph = document.createElement("p");
+emailParagraph.textContent = `Email: ${initialUser?.email || "Unknown"}`;
 
+const roleParagraph = document.createElement("p");
+roleParagraph.textContent = `Role: ${initialUser?.role || "User"}`;
+
+profileCard.appendChild(heading);
+profileCard.appendChild(emailParagraph);
+profileCard.appendChild(roleParagraph);
+
+app.innerHTML = "";
+app.appendChild(profileCard);
+
+// Secure settings preparation.
+// Fixes Prototype Pollution by using an explicit allowlist of expected keys
+// and blocking dangerous prototype properties (__proto__, constructor, prototype).
 function prepareSettings(userSettings) {
     const settings = {};
+    const allowedKeys = ["theme", "language", "fontSize"];
 
-    for (const key in userSettings) {
-        settings[key] = userSettings[key];
+    for (const key of allowedKeys) {
+        if (Object.prototype.hasOwnProperty.call(userSettings, key)) {
+            if (key !== "__proto__" && key !== "constructor" && key !== "prototype") {
+                settings[key] = String(userSettings[key]);
+            }
+        }
     }
 
     return settings;
